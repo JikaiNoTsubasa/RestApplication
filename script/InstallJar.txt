@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile="C:\SBI\IntellijWorkspace\RestApplication\target\rest-application-1.0.0.jar" -DgroupId="fr.triedge.rest" -DartifactId="RestApplication" -Dversion="1.0.0" -Dpackaging=jar -DgeneratePom=true
