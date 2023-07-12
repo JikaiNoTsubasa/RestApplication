@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import fr.triedge.rest.template.Template;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,7 +34,7 @@ public class RestMethodHandler implements HttpHandler {
     }
 
     private void handleResponse(HttpExchange httpExchange, HashMap<String, String> params) throws InvocationTargetException, IllegalAccessException, IOException, NoSuchMethodException, InstantiationException {
-        String json = "";
+        String output = "";
         Object obj = appClass.getDeclaredConstructor().newInstance();
         int paramCount = method.getParameterCount();
         Object result = null;
@@ -62,12 +63,19 @@ public class RestMethodHandler implements HttpHandler {
             }
             result = method.invoke(obj, paramResult);
         }
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        json = gson.toJson(result);
+
+        if (result instanceof Template){
+            Template tpl = (Template) result;
+            output = tpl.generate();
+        }else{
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            output = gson.toJson(result);
+
+        }
 
         OutputStream outputStream = httpExchange.getResponseBody();
-        httpExchange.sendResponseHeaders(200, json.length());
-        outputStream.write(json.getBytes());
+        httpExchange.sendResponseHeaders(200, output.length());
+        outputStream.write(output.getBytes());
         outputStream.flush();
         outputStream.close();
     }
