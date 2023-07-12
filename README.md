@@ -54,10 +54,9 @@ Place this file in resources/html/home.html (the resources folder must be set as
 
 ```java
 @Mapping(path = "/home")
-    public Template home(@Param(name = "name", required = true) String name){
-        System.out.println("HOME");
-        Template tpl = new Template("/html/home.html");
-        tpl.setParameter("##NAME##", name);
-        return tpl;
-    }
+public Template home(@Param(name = "name", required = true) String name){
+    Template tpl = new Template("/html/home.html");
+    tpl.setParameter("##NAME##", name);
+    return tpl;
+}
 ```
